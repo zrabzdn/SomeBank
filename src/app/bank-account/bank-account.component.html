@@ -1,0 +1,59 @@
+<h1>Bank accounts list</h1>
+<div>
+    <input type="button" value="Add" class="btn btn-default" (click)="add()" />
+</div>
+
+<div class="container-fluid">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">BankAccountID</th>
+                <th scope="col">Account Holder</th>
+                <th scope="col">Account Number</th>
+                <th scope="col">BankID</th>
+                <th scope="col">Bank Code</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let bankAccount of bankAccounts; index as i;">
+                <tr>
+                <th scope="row">{{bankAccount.bankAccountID}}</th>
+                <ng-container *ngIf="enableEditIndex != i">              
+                    <td>{{bankAccount.accountHolder}}</td>
+                    <td>{{bankAccount.accountNumber}}</td>
+                    <td>
+                        <select class="form-control" disabled>
+                            <option value="0">Select</option>
+                            <option *ngFor="let bank of banks" [selected]="bank.bankID == bankAccount.bankID" value="{{bank.bankID}}">{{bank.bankName}}</option>
+                        </select> 
+                    </td>
+                    <td>{{bankAccount.bankCode}}</td>
+                    <td *ngIf="enableEditIndex != i">
+                        <button (click)="switchEditMode(i)" class="btn btn-secondary">Edit</button>                
+                    </td>
+                    <td>
+                        <button (click)="remove(bankAccount.bankAccountID)" class="btn btn-danger">Remove</button>
+                    </td>
+                </ng-container>
+                <ng-container *ngIf="enableEditIndex == i">                    
+                    <td><input [(ngModel)]="bankAccount.accountHolder" /></td>
+                    <td><input [(ngModel)]="bankAccount.accountNumber" /></td>
+                    <td>
+                        <select  [(ngModel)]=bankAccount.bankID>
+                            <option *ngFor="let bank of banks" [value]="bank.bankID" [selected]="bank.bankID == bankAccount.bankID">
+                                {{bank.bankName}}
+                            </option>
+                        </select> 
+                    </td>
+                    <td><input [(ngModel)]="bankAccount.bankCode" /></td>
+                    <td><button (click)="save(bankAccount)" class="btn btn-success">Save</button></td>
+                    <td><button (click)="cancel()"class="btn btn-warning">Cancel</button></td>
+                </ng-container>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+    </div>
+<div>{{statusMessage}}</div>
